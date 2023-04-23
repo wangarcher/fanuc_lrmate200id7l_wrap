@@ -6,5 +6,5 @@
     <include file="$(find fanuc_lrmate200id7l_moveit_config)/launch/fanuc_lrmate200id7l_trajectory_controller.launch" />
 
     <!-- moveit launch file -->
-    <include file="$(find fanuc_lrmate200id7l_moveit_config)/launch/moveit_planning_execution.launch" />
+    <include file="$(find fanuc_lrmate200id7l_moveit_config)/launch/moveit_planning_execution_gazebo.launch" />
 </launch>
