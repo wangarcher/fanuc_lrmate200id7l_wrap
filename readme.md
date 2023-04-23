@@ -13,6 +13,9 @@
 
 The [fanuc_experimental][] repository contains additional packages.
 
+## Notice
+This repo only contains gazebo implementations of fanuc lrmate200id7l. And the majority of the meshes, urdf and other robot hardware description were directly forked from the origin community. Thanks a lot for their contribution.
+
 
 ## Contents
 
