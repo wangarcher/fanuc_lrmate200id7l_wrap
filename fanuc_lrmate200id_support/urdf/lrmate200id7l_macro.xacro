@@ -165,7 +165,7 @@
       </inertial>
     </link>
 
-	  <link name="${prefix}end_effector">
+	  <!-- <link name="${prefix}end_effector">
       <visual>
         <origin rpy="0 0 0" xyz="0 0 0"/>
         <geometry>
@@ -178,7 +178,7 @@
       	<mass value="0.0001"/>
       	<inertia ixx="1e-08" ixy="0" ixz="0" iyy="1e-08" iyz="0" izz="1e-08"/>
       </inertial>
-    </link>
+    </link> -->
 
 		<link name="world"/>
 
@@ -231,14 +231,14 @@
       <limit effort="100" lower="-6.2832" upper="6.2832" velocity="12.5664" />
 			<dynamics damping="0.0" friction="1"/>
     </joint>
-		<joint name="${prefix}end_joint" type="revolute">
+		<!-- <joint name="${prefix}end_joint" type="revolute">
 			<origin xyz="0.021 0 0.0" rpy="0 1.5708 0"/>
       <parent link="${prefix}link_6"/>
       <child link="${prefix}end_effector"/>
 			<axis xyz="1 0 0" />
       <limit effort="50" velocity="50" lower="0" upper="0" />
 			<dynamics damping="0.0" friction="1"/>
-    </joint>
+    </joint> -->
 
 		<joint name="${prefix}friction_plate_joint" type="fixed">
       <origin xyz="0.01 0 0" rpy="0 0 0" />
