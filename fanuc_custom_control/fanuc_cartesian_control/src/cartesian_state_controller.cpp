@@ -75,8 +75,8 @@ namespace controller_interface
 
         // populate message
         realtime_pub_->msg_.header.stamp = time;
-        tf::poseKDLToMsg(x_, realtime_pub_->msg_.pose);
-        tf::twistKDLToMsg(x_dot_.GetTwist(), realtime_pub_->msg_.twist);
+        tf::poseKDLToMsg(x_, realtime_pub_->msg_.pose.pose);
+        tf::twistKDLToMsg(x_dot_.GetTwist(), realtime_pub_->msg_.twist.twist);
 
         realtime_pub_->unlockAndPublish();
       }

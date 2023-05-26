@@ -60,9 +60,7 @@ namespace controller_interface
     boost::shared_ptr<KDL::ChainFkSolverVel> fk_vel_solver_;
     boost::shared_ptr<KDL::ChainFkSolverPos> fk_pos_solver_;
 
-    boost::shared_ptr<realtime_tools::RealtimePublisher<
-        ur5e_pid_control::PIDPoseTwist>>
-        realtime_pub_;
+    boost::shared_ptr<realtime_tools::RealtimePublisher<nav_msgs::Odometry>> realtime_pub_;
 
     ros::Time last_publish_time_;
     double publish_rate_;

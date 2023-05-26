@@ -91,7 +91,6 @@ protected:
   tf::TransformListener listener_control_;
   tf::TransformListener listener_arm_;
 
-  // 判断是否所有坐标系矩阵建立
   bool transformation;
 
   // Initialization

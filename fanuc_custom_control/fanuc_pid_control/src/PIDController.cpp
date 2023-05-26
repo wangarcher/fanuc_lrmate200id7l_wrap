@@ -26,10 +26,6 @@ PIDController::PIDController(ros::NodeHandle &n,
                                        &PIDController::now_equilibrium_callback, this,
                                        ros::TransportHints().reliable().tcpNoDelay());
 
-  robot_mode_sub_ = nh_.subscribe("/ur_hardware_interface/robot_mode", 1,
-                                  &PIDController::robot_mode_callback, this,
-                                  ros::TransportHints().reliable().tcpNoDelay());
-
   ////// Publishers
   pub_arm_cmd_ = nh_.advertise<geometry_msgs::Twist>(topic_arm_command, 1);
 
@@ -109,7 +105,10 @@ void PIDController::now_equilibrium_callback(const geometry_msgs::PoseStampedCon
   equilibrium_position_(1) = msg->pose.position.y;
   equilibrium_position_(2) = msg->pose.position.z;
 
-  equilibrium_orientation_
+  equilibrium_orientation_.coeffs() << msg->pose.orientation.x,
+      msg->pose.orientation.y,
+      msg->pose.orientation.z,
+      msg->pose.orientation.w;
 }
 
 ///////////////////////////////////////////////////////////////
@@ -157,7 +156,7 @@ void PIDController::compute_pid()
   Vector3d filter_position;
   // Orientation error w.r.t. desired equilibriums
 
-  Eigen::Quaterniond desired_orientation(y_3(3), y_3(4), y_3(5), y_3(6));
+  Eigen::Quaterniond desired_orientation = equilibrium_orientation_;
   if (desired_orientation.coeffs().dot(arm_real_orientation_.coeffs()) < 0.0)
   {
     arm_real_orientation_.coeffs() << -arm_real_orientation_.coeffs();
@@ -174,8 +173,7 @@ void PIDController::compute_pid()
   error.bottomRows(3) << err_arm_des_orient.axis() * err_arm_des_orient.angle();
   // Translation error w.r.t.（with respect to） desipared equilibrium
 
-  filter_position = y_3.topRows(3);
-  error.topRows(3) = arm_real_position_ - filter_position;
+  error.topRows(3) = arm_real_position_ - equilibrium_position_;
 
   calculated_arm_twist = error - last_error_;
 
@@ -195,21 +193,6 @@ void PIDController::compute_pid()
       arm_desired_twist_final_(i) = arm_desired_twist_final_(i) + arm_acc_upper_limit_ * time_diff;
     }
   }
-
-  cx_0 = cx_1;
-  cx_1 = cx_2;
-  cx_2 = cx_3;
-  cy_0 = cy_1;
-  cy_1 = cy_2;
-  cy_2 = cy_3;
-  cx_3 = arm_desired_twist_final_.segment(0, 3);
-
-  cmid_y = (cx_0 + cx_3) + 3.0 * (cx_1 + cx_2) + 272.214 * cy_0 - 968.233 * cy_1 + 1164.747 * cy_2;
-  cy_3 = cmid_y / 476.728;
-
-  arm_desired_twist_final_(0) = cy_3(0);
-  arm_desired_twist_final_(1) = cy_3(1);
-  arm_desired_twist_final_(2) = cy_3(2);
 
   last_error_ = error;
   last_arm_desired_twist_final_ = arm_desired_twist_final_;
@@ -338,7 +321,7 @@ bool PIDController::get_rotation_matrix(Matrix6d &rotation_matrix,
                              ros::Time(0), transform);
     tf::matrixTFToEigen(transform.getBasis(), rotation_from_to);
     rotation_matrix.setZero();
-    // 因为力和力矩是六维的，所以用两个相同的 R
+
     rotation_matrix.topLeftCorner(3, 3) = rotation_from_to;
     rotation_matrix.bottomRightCorner(3, 3) = rotation_from_to;
   }

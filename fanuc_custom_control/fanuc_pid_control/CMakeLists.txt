@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(ur5e_pid_control)
+project(fanuc_pid_control)
 
 ## Add support for C++11, supported in ROS Kinetic and newer
 # add_definitions(-std=c++11)
@@ -16,28 +16,15 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   geometry_msgs
   nav_msgs
-  message_generation
-  ur_robot_driver
-
+  
 )
 
 set(CMAKE_CXX_FLAGS "-O2 -O3 -std=c++11 -Wall")
 
-add_message_files(
-        FILES
-        PIDPoseTwist.msg
-)
-
-generate_messages(
-        DEPENDENCIES
-        geometry_msgs
-)
-
-
 catkin_package(
   INCLUDE_DIRS include
 #  LIBRARIES cpr_closed_loop_controller
-  CATKIN_DEPENDS geometry_msgs message_runtime
+  CATKIN_DEPENDS geometry_msgs 
 #  DEPENDS system_lib
 )
 
