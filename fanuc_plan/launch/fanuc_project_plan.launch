@@ -1,0 +1,4 @@
+<launch>
+    <node pkg="fanuc_plan" type="project_plan" name="project_plan_pipeline" output="screen" />
+
+</launch>
